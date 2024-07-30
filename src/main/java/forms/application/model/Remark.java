@@ -15,7 +15,8 @@ import java.util.Set;
 public class Remark {
     private String text;
 
-    private byte[] remarkImage;
+    //путь до картинки в minio или на диске
+    private String pathToImage;
 
     private Set<String> necessarySpareParts;
 }

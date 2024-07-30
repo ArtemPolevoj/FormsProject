@@ -14,7 +14,8 @@ public class InspectionReport {
 
     private Implementer implementer;
 
-    private byte[] image;
+    //путь до картинки в minio или на диске
+    private String pathToImage;
 
     private Map<String, Remark> inspectionPoints;
 }
