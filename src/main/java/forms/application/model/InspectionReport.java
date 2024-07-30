@@ -1,21 +1,29 @@
 package forms.application.model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class InspectionReport {
-    private Machinery machinery;
+    @NotNull
+    private MachineryEntity machinery;
 
-    private Implementer implementer;
+    @NotNull
+    private ImplementerEntity implementer;
 
     //путь до картинки в minio или на диске
     private String pathToImage;
 
-    private Map<String, Remark> inspectionPoints;
+    private Map<InspectionPoint, List<Defect>> inspectionPoints;
+
+    @NotNull
+    private LocalDateTime time;
 }
