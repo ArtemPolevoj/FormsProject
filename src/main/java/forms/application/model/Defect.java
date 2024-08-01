@@ -18,16 +18,13 @@ public class Defect {
     @NotNull
     private String description;
 
-    @NotNull
-    private LocalDate discoveryDate;
-
-    private LocalDate eliminationDate;
-
-    private boolean isEliminated;
-
     //путь до картинки в minio или на диске
-    private String pathToImage;
+    private byte [] image;
 
     @NotNull
-    private Set<String> necessarySpareParts;
+    private String necessarySpareParts;
+
+    //работы по устранению
+    @NotNull
+    private String eliminationWorks;
 }

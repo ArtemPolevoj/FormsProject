@@ -12,4 +12,6 @@ public class InspectionPoint {
     private int number;
 
     private InspectionPointStatus status;
+
+    private String title;
 }

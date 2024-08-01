@@ -1,5 +1,5 @@
 package forms.application.util;
 
 public enum InspectionPointStatus {
-    В_НОРМЕ, НЕТ_ОСМОТРА, ЕСТЬ_ЗАМЕЧАНИЯ
+    НЕТ_ЗАМЕЧАНИЙ, НЕТ_ОСМОТРА, ЕСТЬ_ЗАМЕЧАНИЯ, ОТСУТСТВУЕТ
 }

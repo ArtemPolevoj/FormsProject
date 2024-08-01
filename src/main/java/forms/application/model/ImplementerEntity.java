@@ -21,17 +21,9 @@ public class ImplementerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "фамилия")
+    @Column(name = "ФИО")
     @NotNull
-    private String surname;
-
-    @Column(name = "имя")
-    @NotNull
-    private String name;
-
-    @Column(name = "отчество")
-    @NotNull
-    private String patronymic;
+    private String fullName;
 
     private String email;
 
