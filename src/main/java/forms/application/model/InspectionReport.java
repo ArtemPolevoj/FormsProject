@@ -14,6 +14,9 @@ import java.util.Map;
 @NoArgsConstructor
 public class InspectionReport {
     @NotNull
+    private OrganizationEntity organization;
+
+    @NotNull
     private MachineryEntity machinery;
 
     @NotNull

@@ -18,6 +18,9 @@ import java.util.Map;
 @NoArgsConstructor
 public class InspectionReportDto {
     @NotNull
+    private Long organizationId;
+
+    @NotNull
     private Long machinerySerialNumber;
 
     @NotNull
