@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- Project from https://start.vaadin.com/project/65b33f3f-dfe4-4609-8b04-52f245a8a6a8 -->
     <groupId>forms.application</groupId>
@@ -12,6 +13,8 @@
     <properties>
         <java.version>21</java.version>
         <vaadin.version>24.4.6</vaadin.version>
+        <postgres.version>42.7.3</postgres.version>
+        <minio.version>8.5.10</minio.version>
     </properties>
 
     <parent>
@@ -88,24 +91,24 @@
             <artifactId>vaadin-testbench-junit5</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgres.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/io.minio/minio -->
+
+        <!--Minio (images)-->
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
-            <version>8.5.11</version>
+            <version>${minio.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc11 -->
-        <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc11</artifactId>
-            <version>23.5.0.24.07</version>
-        </dependency>
-
-
     </dependencies>
 
     <build>
