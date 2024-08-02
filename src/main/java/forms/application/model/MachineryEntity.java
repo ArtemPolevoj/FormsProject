@@ -6,18 +6,24 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "техника")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "serialNumber")
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class MachineryEntity {
     @Id
     @Column(name = "серийный_номер", unique = true)
-    private String sderialNumber;
+    private String serialNumber;
 
     @Column(name = "производитель")
     @NotNull
