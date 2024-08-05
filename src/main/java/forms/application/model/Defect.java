@@ -1,7 +1,7 @@
 package forms.application.model;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,17 +11,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Defect {
-    @NotNull
     private String description;
 
     //путь до картинки в minio или на диске
-    private byte [] image;
+    private String pathToImage;
 
-    @NotNull
     private String necessarySpareParts;
 
     //работы по устранению
-    @NotNull
     private String eliminationWorks;
 }
