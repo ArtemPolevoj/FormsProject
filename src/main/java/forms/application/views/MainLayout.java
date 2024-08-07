@@ -1,69 +1,55 @@
 package forms.application.views;
 
-import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.html.Footer;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Header;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.orderedlayout.Scroller;
-import com.vaadin.flow.component.sidenav.SideNav;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.theme.lumo.LumoUtility;
+
 
 /**
  * The main view is a top-level placeholder for other views.
  */
-public class MainLayout extends AppLayout {
 
-    private H1 viewTitle;
+@PageTitle("MainPage")
+@Menu(icon = "line-awesome/svg/pencil-ruler-solid.svg", order = 0)
+@Route(value = "")
+@RouteAlias(value = "")
+public class MainLayout extends VerticalLayout {
+
 
     public MainLayout() {
-        setPrimarySection(Section.DRAWER);
-        addDrawerContent();
-        addHeaderContent();
+        setMainLayout();
     }
 
-    private void addHeaderContent() {
-        DrawerToggle toggle = new DrawerToggle();
-        toggle.setAriaLabel("Menu toggle");
+    private void setMainLayout() {
+        H1 h1 = new H1("ОСМОТР ТЕХНИКИ");
+        TextArea warning = new TextArea("ПРЕДУПРЕЖДЕНИЕ");
+        warning.setValue("Сервис предназначен для осмотра техники." +
+                "В данный момент сервис находится в разработке." +
+                "Нажимая кнопку продолжить вы соглашаетесь со всеми условиями");
+        warning.setReadOnly(true);
+        Button proceed = new Button("Продолжить");
+        proceed.addClickListener(e ->
+                proceed.getUI().ifPresent(ui ->
+                        ui.navigate("InputData")));
 
-        viewTitle = new H1();
-        viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 
-        addToNavbar(true, toggle, viewTitle);
+        Button exit = new Button("Выход");
+         exit.addClickListener(e->{
+             UI ui = getUI().get();
+             ui.getPage().executeJs("window.location.href='logout.html'");
+             ui.getSession().close();
+         });
+
+        HorizontalLayout buttonLayout = new HorizontalLayout(exit, proceed);
+        add(h1);
+        add(warning);
+        add(buttonLayout);
     }
 
-    private void addDrawerContent() {
-        Span appName = new Span("FormsProject");
-        appName.addClassNames(LumoUtility.FontWeight.SEMIBOLD, LumoUtility.FontSize.LARGE);
-        Header header = new Header(appName);
-
-        Scroller scroller = new Scroller(createNavigation());
-
-        addToDrawer(header, scroller, createFooter());
-    }
-
-    private SideNav createNavigation() {
-        SideNav nav = new SideNav();
-
-        return nav;
-    }
-
-    private Footer createFooter() {
-        Footer layout = new Footer();
-
-        return layout;
-    }
-
-    @Override
-    protected void afterNavigation() {
-        super.afterNavigation();
-        viewTitle.setText(getCurrentPageTitle());
-    }
-
-    private String getCurrentPageTitle() {
-        PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
-        return title == null ? "" : title.value();
-    }
 }
+
+
