@@ -2,7 +2,6 @@ package forms.application.service;
 
 import forms.application.dao.ReportDao;
 import forms.application.model.Answer;
-import forms.application.model.Defect;
 import forms.application.model.ImplementerEntity;
 import forms.application.model.MachineryEntity;
 import forms.application.model.OrganizationEntity;
@@ -16,11 +15,11 @@ import forms.application.util.QuestionStatus;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +46,21 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<ReportEntity> findAllByOrganizationId(Long organizationId) {
-//todo       return reportDao.findAllByReportOrganizationId(organizationId);
-        return null;
+        return reportDao.findAllByReportOrganizationId(organizationId);
+    }
+
+    @Override
+    public ReportEntity findFirstByReportMachinerySerialNumberAndReportDate(LocalDate date, String serialNumber) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy, M, d");
+        String formattedDate = String.format("[" + date.format(formatter) + "]");
+        List<ReportEntity> reports = reportDao
+                .findByReportMachinerySerialNumberAndReportDate(formattedDate, serialNumber);
+        if (reports.isEmpty()) {
+            throw new EntityNotFoundException("Report on the technique with id = " + serialNumber + " " +
+                    "on the date = " + date + " not found");
+        }
+
+        return reports.getFirst();
     }
 
     @Override

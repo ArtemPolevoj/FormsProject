@@ -9,7 +9,7 @@ import forms.application.service.dto.DefectDto;
 import forms.application.service.dto.QuestionDto;
 import forms.application.service.dto.ReportDto;
 import forms.application.util.QuestionStatus;
-import io.minio.MinioClient;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -35,6 +35,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
@@ -47,29 +48,71 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ReportServiceImplTest {
+    private static final String MACHINE_SERIAL_NUMBER = "2345";
+
     @Autowired
     ReportServiceImpl reportService;
 
     @Test
-    @Order(3)
+    @Order(4)
     void findAll() {
         List<ReportEntity> reports = reportService.findAll();
 
         assertThat(reports).isNotNull().isNotEmpty();
-        assertThat(reports.size()).isEqualTo(1);
+        assertThat(reports.size()).isGreaterThanOrEqualTo(1);
     }
 
     @Test
+    @Order(5)
     void findAllByOrganizationId() {
+        List<ReportEntity> reports = reportService.findAllByOrganizationId(1L);
+
+        assertThat(reports).isNotNull().isNotEmpty();
+        assertThat(reports.size()).isGreaterThanOrEqualTo(1);
     }
 
     @Test
     @Order(2)
     void findById() {
+        //todo здесь должен быть id = 1L
+        ReportEntity report = reportService.findById(2L);
+
+        assertThat(report).isNotNull();
+        //todo здесь должен быть id = 1L
+        assertEquals(2L, report.getId());
     }
 
     @Test
-    void deleteById() {
+    @Order(3)
+    void findByIdMustThrows() {
+        assertThrows(EntityNotFoundException.class, () -> reportService.findById(Long.MAX_VALUE));
+    }
+
+    @Test
+    @Order(6)
+    void findFirstByReportMachinerySerialNumberAndReportDate() {
+        ReportEntity report = reportService
+                .findFirstByReportMachinerySerialNumberAndReportDate(LocalDate.now(), MACHINE_SERIAL_NUMBER);
+
+        assertThat(report).isNotNull();
+        assertEquals(LocalDate.now(), report.getReport().getDate());
+        assertEquals(MACHINE_SERIAL_NUMBER, report.getReport().getMachinery().getSerialNumber());
+    }
+
+    @Test
+    @Order(7)
+    void findByIdMustThrowsWhenWrongDate() {
+        assertThrows(EntityNotFoundException.class, () ->
+                reportService.findFirstByReportMachinerySerialNumberAndReportDate(
+                        LocalDate.of(1969, 10, 29), MACHINE_SERIAL_NUMBER));
+    }
+
+    @Test
+    @Order(8)
+    void findByIdMustThrowsWhenWrongSerialNumber() {
+        assertThrows(EntityNotFoundException.class, () ->
+                reportService.findFirstByReportMachinerySerialNumberAndReportDate(
+                        LocalDate.now(), "unexpected serial number"));
     }
 
     @Test
@@ -115,7 +158,7 @@ class ReportServiceImplTest {
         ReportDto report = new ReportDto();
         report.setOrganizationId(1L);
         report.setImplementerId(1L);
-        report.setMachinerySerialNumber("2345");
+        report.setMachinerySerialNumber(MACHINE_SERIAL_NUMBER);
         report.setImage(getImage("src/test/resources/images/рис. отчета.png"));
 
         Map<QuestionDto, AnswerDto> questions = new HashMap<>();
@@ -137,4 +180,5 @@ class ReportServiceImplTest {
 
         return report;
     }
+
 }

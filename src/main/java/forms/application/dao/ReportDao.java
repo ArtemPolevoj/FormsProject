@@ -2,16 +2,24 @@ package forms.application.dao;
 
 import forms.application.model.ReportEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ReportDao extends JpaRepository<ReportEntity, Long> {
-    //todo не работает т.к. внутренняя сущность отчета хранится в JSONB. Переписать
-//    Optional<ReportEntity> findFirstByReportMachinerySerialNumberAndReportDate(String serialNumber, LocalDate date);
+    @Query(value = "SELECT ao.id, ao.акт_осмотра " +
+            "FROM акты_осмотров ao " +
+            "WHERE ao.акт_осмотра -> 'machinery' ->> 'serialNumber' = :serialNumber " +
+            "AND ao.акт_осмотра ->> 'date' = :date", nativeQuery = true)
+    List<ReportEntity> findByReportMachinerySerialNumberAndReportDate(@Param("date") String date, @Param("serialNumber") String serialNumber);
 
-//    List<ReportEntity> findAllByReportOrganizationId(Long id);
+    @Query(value = "SELECT id, акт_осмотра\n" +
+            "FROM акты_осмотров ao\n" +
+            "WHERE ao.акт_осмотра -> 'organization' ->> 'id' = CAST(:id AS TEXT)",
+            nativeQuery = true)
+    List<ReportEntity> findAllByReportOrganizationId(@Param("id") Long organizationId);
 }

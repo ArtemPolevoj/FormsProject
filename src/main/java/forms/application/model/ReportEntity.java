@@ -15,14 +15,14 @@ import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-@Entity
-@Table(name = "акты_осмотров")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
 @ToString
+@Entity
+@Table(name = "акты_осмотров")
 public class ReportEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
