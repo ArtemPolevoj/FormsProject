@@ -40,4 +40,12 @@ public class MachineryEntity {
     @Column(name = "наработка")
     @NotNull
     private Integer operatingTime;
+
+    @Column(name = "организация", unique = true)
+    @NotNull
+    private String organization;
+
+    @Column(name = "подразделение", unique = true)
+    @NotNull
+    private String division;
 }
