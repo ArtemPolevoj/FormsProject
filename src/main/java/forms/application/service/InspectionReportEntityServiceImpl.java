@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class InspectionReportEntityServiceImpl implements InspectionReportEntityService {
+public class InspectionReportEntityServiceImpl implements ServiceEntity<InspectionReportEntity> {
     private final InspectionReportEntityRepository inspectionReportEntityRepository;
 
     @Override
