@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class DivisionEntityServiceImp implements DivisionEntityService {
+public class DivisionEntityServiceImpl implements ServiceEntity<DivisionEntity> {
     private final DivisionEntityRepository divisionEntityRepository;
 
     @Override
@@ -39,5 +39,10 @@ public class DivisionEntityServiceImp implements DivisionEntityService {
     @Override
     public void delete(Long id) {
         divisionEntityRepository.delete(getById(id));
+    }
+
+    public List<String> getAllNames(){
+        return divisionEntityRepository.findAll().stream().map(DivisionEntity::getName).
+                collect(java.util.stream.Collectors.toList());
     }
 }
