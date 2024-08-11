@@ -5,11 +5,12 @@ import forms.application.repository.ImplementerEntityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ImplementerEntityServiceImpl implements ImplementerEntityService {
+public class ImplementerEntityServiceImpl implements ServiceEntity<ImplementerEntity> {
 
     private final ImplementerEntityRepository implementerEntityRepository;
 
@@ -43,5 +44,18 @@ public class ImplementerEntityServiceImpl implements ImplementerEntityService {
         implementerEntityUpdated.setEmail(implementerEntity.getEmail());
 
         return implementerEntityRepository.save(implementerEntityUpdated);
+    }
+    public List<String> getImplementersNames() {
+        List<String> implementerListNames = new ArrayList<>();
+        for (ImplementerEntity impl: getAll()){
+            implementerListNames.add(impl.getFullName());
+        }
+        return implementerListNames;
+    }
+    public ImplementerEntity createByName(String name) {
+        ImplementerEntity implementerEntity = new ImplementerEntity();
+        implementerEntity.setFullName(name);
+        create(implementerEntity);
+        return implementerEntity;
     }
 }
