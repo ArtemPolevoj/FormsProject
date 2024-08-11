@@ -35,11 +35,11 @@ public class MachineryEntity {
 
     @Column(name = "хозяйственный_номер", unique = true)
     @NotNull
-    private Integer businessNumber;
+    private String businessNumber;
 
     @Column(name = "наработка")
     @NotNull
-    private Integer operatingTime;
+    private String operatingTime;
 
     @Column(name = "организация", unique = true)
     @NotNull
@@ -48,4 +48,8 @@ public class MachineryEntity {
     @Column(name = "подразделение", unique = true)
     @NotNull
     private String division;
+
+    @Column(name = "тип", unique = true)
+    @NotNull
+    private String type;
 }
