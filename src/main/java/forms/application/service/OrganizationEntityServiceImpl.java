@@ -7,10 +7,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class OrganizationEntityServiceImpl implements OrganizationEntityService {
+public class OrganizationEntityServiceImpl implements ServiceEntity<OrganizationEntity> {
 
     private final OrganizationEntityRepository organizationEntityRepository;
 
@@ -44,9 +45,16 @@ public class OrganizationEntityServiceImpl implements OrganizationEntityService 
 
     @Override
     public void delete(Long id) {
-
         OrganizationEntity organizationEntity = getById(id);
         organizationEntityRepository.delete(organizationEntity);
-
+    }
+    public List<String> getAllNames(){
+        return organizationEntityRepository.findAll().stream().map(OrganizationEntity::getName).
+                collect(Collectors.toList());
+    }
+    public void createByName(String name){
+        OrganizationEntity organizationEntity = new OrganizationEntity();
+        organizationEntity.setName(name);
+        organizationEntityRepository.save(organizationEntity);
     }
 }
