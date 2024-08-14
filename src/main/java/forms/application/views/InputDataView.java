@@ -51,9 +51,11 @@ public class InputDataView extends VerticalLayout {
         H1 h1 = new H1("ОСМОТР ТЕХНИКИ");
         H2 h2 = new H2("Входные данные");
         Button proceed = new Button("Продолжить");
-        proceed.addClickListener(e ->
-                proceed.getUI().ifPresent(ui ->
-                        ui.navigate("UpperLevel")));
+        proceed.addClickListener(e ->{proceed.getUI().ifPresent(ui ->
+                        ui.navigate("PreInspection"));
+           // TODO сделать проверку на заполнение;
+        });
+
 
         Button back = new Button("Назад");
         back.addClickListener(e ->
