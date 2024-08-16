@@ -28,7 +28,7 @@ public class ImplementerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ФИО", unique = true)
+    @Column(name = "фио", unique = true)
     private String fullName;
 
     @Column(unique = true)
