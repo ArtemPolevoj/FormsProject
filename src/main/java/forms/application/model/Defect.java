@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 /**
  * Неисправность
  */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
