@@ -6,7 +6,7 @@ import forms.application.model.Report;
 import forms.application.model.ReportEntity;
 import forms.application.service.dto.AnswerDto;
 import forms.application.service.dto.DefectDto;
-import forms.application.service.dto.QuestionDto;
+import forms.application.service.dto.QuestionNumberedByMachineType;
 import forms.application.service.dto.ReportDto;
 import forms.application.util.QuestionStatus;
 import jakarta.persistence.EntityNotFoundException;
@@ -44,7 +44,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("Сервис для рапорты с отчетами")
 @Import(value = {
         ReportServiceImpl.class, OrganizationServiceImpl.class,
-        MachineServiceImpl.class, ImplementerServiceImpl.class, ImageServiceImpl.class, MinioConfig.class, MinioProperties.class})
+        MachineServiceImpl.class, ModelServiceImpl.class, ImplementerServiceImpl.class, ImageServiceImpl.class,
+        MinioConfig.class, MinioProperties.class, QuestionServiceImpl.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ReportServiceImplTest {
@@ -74,12 +75,10 @@ class ReportServiceImplTest {
     @Test
     @Order(2)
     void findById() {
-        //todo здесь должен быть id = 1L
-        ReportEntity report = reportService.findById(2L);
+        ReportEntity report = reportService.findById(1L);
 
         assertThat(report).isNotNull();
-        //todo здесь должен быть id = 1L
-        assertEquals(2L, report.getId());
+        assertEquals(1L, report.getId());
     }
 
     @Test
@@ -131,7 +130,7 @@ class ReportServiceImplTest {
         assertNotNull(report.getPathToImage());
         assertEquals(1, report.getQuestions().size());
 
-        QuestionDto questionDto = reportDto.getQuestions().keySet().stream().findFirst().get();
+        QuestionNumberedByMachineType questionDto = reportDto.getQuestions().keySet().stream().findFirst().get();
         assertTrue(report.getQuestions().containsKey(questionDto));
 
         AnswerDto answerDto = reportDto.getQuestions().get(questionDto);
@@ -161,7 +160,7 @@ class ReportServiceImplTest {
         report.setMachinerySerialNumber(MACHINE_SERIAL_NUMBER);
         report.setImage(getImage("src/test/resources/images/рис. отчета.png"));
 
-        Map<QuestionDto, AnswerDto> questions = new HashMap<>();
+        Map<QuestionNumberedByMachineType, AnswerDto> questions = new HashMap<>();
 
         AnswerDto answerDto = new AnswerDto();
         answerDto.setStatus(QuestionStatus.ЕСТЬ_ЗАМЕЧАНИЯ);
@@ -175,7 +174,7 @@ class ReportServiceImplTest {
             defectDto.setImage(getImage("src/test/resources/images/деф." + i + ".png"));
             answerDto.getDefects().add(defectDto);
         }
-        questions.put(new QuestionDto(111, "quest111"), answerDto);
+        questions.put(new QuestionNumberedByMachineType(111, "quest111"), answerDto);
         report.setQuestions(questions);
 
         return report;
