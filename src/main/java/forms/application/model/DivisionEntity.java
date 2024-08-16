@@ -15,7 +15,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "вопросы")
+@Table(name = "подразделения")
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
@@ -23,15 +23,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class QuestionEntity {
+public class DivisionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //100, 200, 300....
-    @Column(name = "уровень")
-    private Integer level;
-
-    @Column(name = "описание", unique = true)
-    private String description;
+    @Column(name = "наименование", unique = true)
+    private String name;
 }

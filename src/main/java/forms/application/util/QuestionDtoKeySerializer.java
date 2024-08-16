@@ -4,10 +4,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import forms.application.service.dto.QuestionDto;
-import lombok.RequiredArgsConstructor;
+import forms.application.service.dto.QuestionNumberedByMachineType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -18,11 +16,11 @@ import java.io.StringWriter;
  * https://www.baeldung.com/jackson-custom-serialization
  */
 @Slf4j
-public class QuestionDtoKeySerializer extends JsonSerializer<QuestionDto> {
+public class QuestionDtoKeySerializer extends JsonSerializer<QuestionNumberedByMachineType> {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public void serialize(QuestionDto value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+    public void serialize(QuestionNumberedByMachineType value, JsonGenerator gen, SerializerProvider provider) throws IOException {
         log.info("начало работы сериализатора");
         StringWriter writer = new StringWriter();
         mapper.writeValue(writer, value);

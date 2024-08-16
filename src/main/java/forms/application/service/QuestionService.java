@@ -4,17 +4,18 @@ import forms.application.model.QuestionEntity;
 import forms.application.service.dto.QuestionDto;
 
 import java.util.List;
+import java.util.Set;
 
 public interface QuestionService {
     List<QuestionEntity> findAll();
 
-    List<QuestionDto> findAllByMachineSerialNumber(String serialNumber);
+    QuestionEntity findById(Long id);
 
-    QuestionEntity findByNumber(Integer id);
+    void deleteById(Long id);
 
-    void deleteById(Integer id);
+    QuestionEntity create(QuestionDto question);
 
-    QuestionEntity create(QuestionDto question, String machineSerialNumber);
+    QuestionEntity update(QuestionDto question, Long id);
 
-    QuestionEntity update(QuestionDto question);
+    Set<QuestionEntity> findAllByIds(Set<Long> ids);
 }

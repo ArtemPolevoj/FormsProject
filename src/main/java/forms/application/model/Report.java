@@ -1,10 +1,9 @@
 package forms.application.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import forms.application.service.dto.QuestionDto;
+import forms.application.service.dto.QuestionNumberedByMachineType;
 import forms.application.util.QuestionDtoKeyDeserializer;
 import forms.application.util.QuestionDtoKeySerializer;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +24,7 @@ public class Report {
     private OrganizationEntity organization;
 
     @NotNull
-    private MachineryEntity machinery;
+    private MachineEntity machinery;
 
     @NotNull
     private ImplementerEntity implementer;
@@ -37,7 +36,7 @@ public class Report {
     @JsonDeserialize(keyUsing = QuestionDtoKeyDeserializer.class)
     @JsonSerialize(keyUsing = QuestionDtoKeySerializer.class)
     @JsonProperty("questions")
-    private Map<QuestionDto, Answer> questions;
+    private Map<QuestionNumberedByMachineType, Answer> questions;
 
     @NotNull
     private LocalDate date;

@@ -23,5 +23,5 @@ public class ReportDto {
     //путь до картинки в minio или на диске
     private byte[] image;
 
-    private Map<QuestionDto, AnswerDto> questions;
+    private Map<QuestionNumberedByMachineType, AnswerDto> questions;
 }

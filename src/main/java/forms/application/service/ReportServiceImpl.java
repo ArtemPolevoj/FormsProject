@@ -3,13 +3,13 @@ package forms.application.service;
 import forms.application.dao.ReportDao;
 import forms.application.model.Answer;
 import forms.application.model.ImplementerEntity;
-import forms.application.model.MachineryEntity;
+import forms.application.model.MachineEntity;
 import forms.application.model.OrganizationEntity;
 import forms.application.model.Report;
 import forms.application.model.ReportEntity;
 import forms.application.service.dto.AnswerDto;
 import forms.application.service.dto.DefectDto;
-import forms.application.service.dto.QuestionDto;
+import forms.application.service.dto.QuestionNumberedByMachineType;
 import forms.application.service.dto.ReportDto;
 import forms.application.util.QuestionStatus;
 import jakarta.persistence.EntityNotFoundException;
@@ -81,8 +81,8 @@ public class ReportServiceImpl implements ReportService {
         Report report = getReportWithoutQuestions(dto);
 
         //в итоговый отчет
-        Map<QuestionDto, Answer> resultQuestions = new HashMap<>(dto.getQuestions().size());
-        for (QuestionDto question : dto.getQuestions().keySet()) {
+        Map<QuestionNumberedByMachineType, Answer> resultQuestions = new HashMap<>(dto.getQuestions().size());
+        for (QuestionNumberedByMachineType question : dto.getQuestions().keySet()) {
             AnswerDto answer = getAnswerDto(dto, question);
 
             //в итоговый отчет
@@ -113,7 +113,7 @@ public class ReportServiceImpl implements ReportService {
     /**
      * Метод получения ответа с его валидацией
      */
-    private static AnswerDto getAnswerDto(ReportDto dto, QuestionDto question) {
+    private static AnswerDto getAnswerDto(ReportDto dto, QuestionNumberedByMachineType question) {
         AnswerDto answer = dto.getQuestions().get(question);
         if (answer.getStatus().equals(QuestionStatus.НЕТ_ЗАМЕЧАНИЙ) && !answer.getDefects().isEmpty()) {
             throw new RuntimeException("Answer status can't be 'НЕТ_ЗАМЕЧАНИЙ' if there are defects");
@@ -130,7 +130,7 @@ public class ReportServiceImpl implements ReportService {
     private Report getReportWithoutQuestions(ReportDto dto) {
         ImplementerEntity implementer = implementerService.findById(dto.getImplementerId());
         OrganizationEntity organization = organizationService.findById(dto.getOrganizationId());
-        MachineryEntity machine = machineService.findBySerialNumber(dto.getMachinerySerialNumber());
+        MachineEntity machine = machineService.findBySerialNumber(dto.getMachinerySerialNumber());
 
         Report report = new Report();
         report.setDate(LocalDate.now());

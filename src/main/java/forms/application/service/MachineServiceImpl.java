@@ -1,7 +1,8 @@
 package forms.application.service;
 
 import forms.application.dao.MachineDao;
-import forms.application.model.MachineryEntity;
+import forms.application.model.MachineEntity;
+import forms.application.model.ModelEntity;
 import forms.application.service.dto.MachineDto;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,13 +18,15 @@ import java.util.Optional;
 public class MachineServiceImpl implements MachineService {
     private final MachineDao machineDao;
 
+    private final ModelService typeService;
+
     @Override
-    public List<MachineryEntity> findAll() {
+    public List<MachineEntity> findAll() {
         return machineDao.findAll();
     }
 
     @Override
-    public MachineryEntity findBySerialNumber(@NotNull String serialNumber) {
+    public MachineEntity findBySerialNumber(@NotNull String serialNumber) {
         return machineDao.findById(serialNumber)
                 .orElseThrow(()
                         -> new EntityNotFoundException("Machine with serial number = " + serialNumber + " not found"));
@@ -35,22 +38,26 @@ public class MachineServiceImpl implements MachineService {
     }
 
     @Override
-    public MachineryEntity create(MachineDto machine) {
-        Optional<MachineryEntity> bySerialNumber = machineDao.findById(machine.getSerialNumber());
+    public MachineEntity create(MachineDto machine) {
+        Optional<MachineEntity> bySerialNumber = machineDao.findById(machine.getSerialNumber());
         if (bySerialNumber.isPresent()) {
             throw new EntityExistsException(
                     "Machine with serial number = " + machine.getSerialNumber() + " is already exists");
         }
 
-        return machineDao.save(MachineDto.convert(machine));
+        ModelEntity type = typeService.findByModel(machine.getModel());
+
+        return machineDao.save(MachineDto.convert(machine, type));
     }
 
     @Override
-    public MachineryEntity update(MachineDto machine) {
-        MachineryEntity bySerialNumber = this.findBySerialNumber(machine.getSerialNumber());
+    public MachineEntity update(MachineDto machine) {
+        ModelEntity type = typeService.findByModel(machine.getModel());
+
+        MachineEntity bySerialNumber = this.findBySerialNumber(machine.getSerialNumber());
 
         bySerialNumber.setBusinessNumber(machine.getBusinessNumber());
-        bySerialNumber.setModel(machine.getModel());
+        bySerialNumber.setModel(type);
         bySerialNumber.setOperatingTime(machine.getOperatingTime());
         bySerialNumber.setManufacturer(machine.getManufacturer());
 

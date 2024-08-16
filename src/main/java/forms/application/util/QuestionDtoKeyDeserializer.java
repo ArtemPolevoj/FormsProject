@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.KeyDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.IntNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import forms.application.service.dto.QuestionDto;
+import forms.application.service.dto.QuestionNumberedByMachineType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -21,7 +19,7 @@ public class QuestionDtoKeyDeserializer extends KeyDeserializer {
     private ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public QuestionDto deserializeKey(String key, DeserializationContext ctxt) throws IOException {
+    public QuestionNumberedByMachineType deserializeKey(String key, DeserializationContext ctxt) throws IOException {
         // Разбираем JSON-строку с помощью Jackson
         JsonNode node = mapper.readTree(key);
 
@@ -30,6 +28,6 @@ public class QuestionDtoKeyDeserializer extends KeyDeserializer {
         String title = (node.path("question.title")).asText();
 
         // Вызываем конструктор QuestionDto с полученными значениями
-        return new QuestionDto(number, title);
+        return new QuestionNumberedByMachineType(number, title);
     }
 }

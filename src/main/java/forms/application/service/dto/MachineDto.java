@@ -1,6 +1,7 @@
 package forms.application.service.dto;
 
-import forms.application.model.MachineryEntity;
+import forms.application.model.MachineEntity;
+import forms.application.model.ModelEntity;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,13 +28,21 @@ public class MachineDto {
     @NotNull
     private Integer operatingTime;
 
-    public static MachineryEntity convert(MachineDto dto) {
-        return MachineryEntity.builder()
+    @NotNull
+    private OrganizationDto organization;
+
+    @NotNull
+    private DivisionDto division;
+
+    public static MachineEntity convert(MachineDto dto, ModelEntity type) {
+        return MachineEntity.builder()
                 .serialNumber(dto.serialNumber)
                 .operatingTime(dto.operatingTime)
                 .manufacturer(dto.manufacturer)
-                .model(dto.model)
+                .model(type)
                 .businessNumber(dto.businessNumber)
+                .organization(OrganizationDto.convert(dto.getOrganization()))
+                .division(DivisionDto.convert(dto.getDivision()))
                 .build();
     }
 }

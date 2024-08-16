@@ -28,10 +28,12 @@ public class ImplementerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ФИО")
+    @Column(name = "ФИО", unique = true)
     private String fullName;
 
+    @Column(unique = true)
     private String email;
 
+    @Column(unique = true)
     private String phone;
 }
