@@ -53,7 +53,7 @@ public class ModelServiceImpl implements ModelService {
         int questionIndex = 0;
         for (int i = 0; i < questionsEntities.size(); i++) {
             if (0 < i && !questionsEntities.get(i).getLevel().equals(questionsEntities.get(i-1).getLevel())) {
-                questionIndex = 1;
+                questionIndex = 0;
             }
             questionIndex++;
             numberedQuestions.add(new QuestionNumberedByMachineType(questionsEntities.get(i), questionIndex));
