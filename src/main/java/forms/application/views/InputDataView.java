@@ -138,10 +138,8 @@ public class InputDataView extends VerticalLayout {
     }
 
     private void getManufacturer() {
-
         List<String> manufacturers = new ArrayList<>();
         machineryEntityList.forEach(machine -> manufacturers.add(machine.getManufacturer()));
-
         manufacturer.setAllowCustomValue(true);
         manufacturer.addCustomValueSetListener(e -> {
             String customValue = e.getDetail();
@@ -157,7 +155,6 @@ public class InputDataView extends VerticalLayout {
     }
 
     private void getModel() {
-
         List<String> modelList = new ArrayList<>();
         machineryEntityList.forEach(machine -> modelList.add(machine.getModel()));
         model.setAllowCustomValue(true);
