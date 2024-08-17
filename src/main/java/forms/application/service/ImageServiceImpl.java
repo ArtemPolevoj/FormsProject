@@ -10,9 +10,7 @@ import io.minio.RemoveObjectArgs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -26,8 +24,8 @@ public class ImageServiceImpl implements ImageService {
     private final MinioClient minioClient;
 
     @Override
-    public String uploadImage(String resultFileName, byte[] file) {
-        return putObjectToBucket(file, resultFileName);
+    public void uploadImage(String resultFileName, byte[] file) {
+        putObjectToBucket(file, resultFileName);
     }
 
     @Override
@@ -86,7 +84,7 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
-    private String putObjectToBucket(byte [] image, String resultFileName) {
+    private void putObjectToBucket(byte [] image, String resultFileName) {
         createBucketIfNotExists(BUCKET_NAME);
 
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(image)) {
@@ -96,10 +94,10 @@ public class ImageServiceImpl implements ImageService {
                     .object(resultFileName)
                     .stream(inputStream, inputStream.available(), -1)
                     .build());
-            return "The image has been uploaded successfully with name: " + resultFileName;
+            log.info("The image has been uploaded successfully with name: " + resultFileName);
 
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new RuntimeException("Failed to save the image along the way: " + resultFileName);
         }
     }
 }

@@ -11,8 +11,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.combobox.ComboBox;
 import forms.application.model.ImplementerEntity;
-import forms.application.service.ImplementerEntityServiceImpl;
-import forms.application.service.OrganizationEntityServiceImpl;
+import forms.application.service.ImplementerService;
+import forms.application.service.OrganizationService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,14 +21,15 @@ import java.util.List;
 @PageTitle("InputData")
 @Route(value = "InputData")
 public class InputDataView extends VerticalLayout {
+    private final ImplementerService implementerService;
 
+    private final OrganizationService organizationService;
 
-    private final ImplementerEntityServiceImpl implementerEntityService;
+    public InputDataView(OrganizationService organizationService,
+                         ImplementerService implementerService) {
 
-    public InputDataView(OrganizationEntityServiceImpl organizationEntity,
-                          ImplementerEntityServiceImpl implementerEntityService) {
-
-        this.implementerEntityService = implementerEntityService;
+        this.implementerService = implementerService;
+        this.organizationService = organizationService;
         setInputDataView();
     }
     private void setInputDataView(){
@@ -80,7 +81,7 @@ public class InputDataView extends VerticalLayout {
     }
     private void getImplementer(){
         List<String> implementerList = new ArrayList<>();
-        for (ImplementerEntity impl: implementerEntityService.getAll()){
+        for (ImplementerEntity impl: implementerService.findAll()){
             implementerList.add(impl.getFullName());
         }
         ComboBox<String> implementer = new ComboBox<>("Исполнитель");

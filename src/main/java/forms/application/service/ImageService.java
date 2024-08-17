@@ -1,7 +1,7 @@
 package forms.application.service;
 
 public interface ImageService {
-    String uploadImage(String resultFileName, byte[] file);
+    void uploadImage(String resultFileName, byte[] file);
 
     byte[] downloadImage(String resultFileName);
 
