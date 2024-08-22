@@ -14,7 +14,7 @@ spring:
     show-sql: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/forms_project
+    url: jdbc:postgresql://localhost:5432/forms_project_test
     username: postgres
     password: admin
   #для инициализации schema.sql и data.sql

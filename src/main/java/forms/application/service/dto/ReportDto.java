@@ -1,24 +1,21 @@
 package forms.application.service.dto;
 
-import forms.application.model.Defect;
-import forms.application.model.InspectionPoint;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Map;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InspectionReportDto {
+public class ReportDto {
     @NotNull
     private Long organizationId;
 
     @NotNull
-    private Long machinerySerialNumber;
+    private String machinerySerialNumber;
 
     @NotNull
     private Long implementerId;
@@ -26,5 +23,5 @@ public class InspectionReportDto {
     //путь до картинки в minio или на диске
     private byte[] image;
 
-    private Map<InspectionPoint, List<Defect>> inspectionPoints;
+    private Map<QuestionNumberedByMachineType, AnswerDto> questions;
 }
