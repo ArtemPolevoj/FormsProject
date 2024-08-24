@@ -34,7 +34,7 @@ public class UpperLevelView extends VerticalLayout {
 
         Button back = new Button("Назад");
         back.addClickListener(e -> getUI().ifPresent(ui ->
-                ui.navigate("InputData")));
+                ui.navigate("PreInspection")));
 
         add(h1);
         add(h2);
