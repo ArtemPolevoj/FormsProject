@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,5 +47,25 @@ public class ImplementerServiceImpl implements ImplementerService {
         byId.setFullName(implementer.getFullName());
 
         return implementerDao.save(byId);
+    }
+
+    public void createByName(String customValue) {
+        ImplementerEntity byName = implementerDao.findByFullName(customValue);
+
+        if (byName == null) {
+            ImplementerEntity implementerEntity = new ImplementerEntity();
+            implementerEntity.setFullName(customValue);
+            implementerDao.save(implementerEntity);
+
+        }
+    }
+
+    public List<String> getAllNames() {
+        List<ImplementerEntity> implementerEntityList = findAll();
+        List<String> temp =  new ArrayList<>();
+        for (ImplementerEntity implementerEntity: implementerEntityList){
+            temp.add(implementerEntity.getFullName());
+        }
+        return temp;
     }
 }
