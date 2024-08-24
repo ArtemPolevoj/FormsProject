@@ -37,8 +37,8 @@ public class TypeMachineEntityServiceImp implements ServiceEntity<TypeMachineEnt
     public void delete(Long id) {
         typeMachineRepository.deleteById(id);
     }
-    public Collection<String> getAllNames(){
-        return typeMachineRepository.findAll().stream().map(TypeMachineEntity::getTypeMachine).
+    public List<String> getAllNames(){
+        return getAll().stream().map(TypeMachineEntity::getTypeMachine).
                 collect(java.util.stream.Collectors.toList());
     }
 }
