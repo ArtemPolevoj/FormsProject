@@ -63,4 +63,8 @@ public class MachineServiceImpl implements MachineService {
 
         return machineDao.save(bySerialNumber);
     }
+
+    public List<MachineEntity> getAll() {
+        return machineDao.findAll();
+    }
 }
