@@ -1,13 +1,17 @@
 package forms.application.views;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
@@ -47,10 +51,14 @@ public class WishesView extends VerticalLayout {
     }
     private void getWishes(){
         TextArea wish = new TextArea("Пожелания, внедрения");
-        Button buttonWishShow = new Button("?");
-
-        buttonWishShow.addClickListener(e -> Notification.show("Напишите пожелания," +
-                " предложения. Опишите внедрения введенные заказчиком"));
+        Button button = new Button(new Icon(VaadinIcon.INFO_CIRCLE));
+        button.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,
+                ButtonVariant.LUMO_ICON);
+        wish.setSuffixComponent(button);
+        wish.setTooltipText("Напишите пожелания," +
+                " предложения. Опишите внедрения введенные заказчиком");
+        Tooltip tooltip = wish.getTooltip().withManual(true);
+        button.addClickListener(event -> tooltip.setOpened(!tooltip.isOpened()));
 
         var buffer = new MultiFileMemoryBuffer();
         Button buttonPhoto = new Button("Загрузить фото");
@@ -66,9 +74,7 @@ public class WishesView extends VerticalLayout {
 
         Div getPhoto = new Div(photoLabel, setPhoto);
 
-        HorizontalLayout wishLayout = new HorizontalLayout(wish, buttonWishShow);
-
-        add(wishLayout);
+        add(wish);
         add(getPhoto);
     }
 }
