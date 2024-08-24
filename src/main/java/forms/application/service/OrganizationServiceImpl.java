@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -46,5 +47,20 @@ public class OrganizationServiceImpl implements OrganizationService {
         byId.setEmail(org.getEmail());
 
         return organizationDao.save(byId);
+    }
+
+    public void createByName(String customValue) {
+        OrganizationEntity organizationEntity = new OrganizationEntity();
+        organizationEntity.setName(customValue);
+        organizationDao.save(organizationEntity);
+    }
+
+    public List<String> getAllNames() {
+        List<OrganizationEntity> organizationEntityList = findAll();
+        List<String> temp = new ArrayList<>();
+        for (OrganizationEntity organization:organizationEntityList){
+            temp.add(organization.getName());
+        }
+        return temp;
     }
 }
