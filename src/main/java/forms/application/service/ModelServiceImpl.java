@@ -1,5 +1,6 @@
 package forms.application.service;
 
+import forms.application.dao.MachineDao;
 import forms.application.dao.MachineTypeDao;
 import forms.application.model.ModelEntity;
 import forms.application.model.QuestionEntity;
@@ -19,9 +20,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class ModelServiceImpl implements ModelService {
-    private final MachineTypeDao typeDao;
-
-    private final QuestionService questionService;
+    MachineDao machineDao;
 
     @Override
     public List<ModelEntity> findAll() {
@@ -46,20 +45,21 @@ public class ModelServiceImpl implements ModelService {
     public ModelWithNumberedQuestionsDto findAllByModelWithNumberedQuestions(String model) {
         ModelEntity type = this.findByModel(model);
 
-        List<QuestionEntity> questionsEntities = new ArrayList<>(type.getQuestions());
-        questionsEntities.sort(Comparator.comparingInt(QuestionEntity::getLevel));
-
-        List<QuestionNumberedByMachineType> numberedQuestions = new ArrayList<>(questionsEntities.size());
-        int questionIndex = 0;
-        for (int i = 0; i < questionsEntities.size(); i++) {
-            if (0 < i && !questionsEntities.get(i).getLevel().equals(questionsEntities.get(i-1).getLevel())) {
-                questionIndex = 0;
-            }
-            questionIndex++;
-            numberedQuestions.add(new QuestionNumberedByMachineType(questionsEntities.get(i), questionIndex));
-        }
-
-        return new ModelWithNumberedQuestionsDto(type.getModel(), numberedQuestions);
+      //  List<QuestionEntity> questionsEntities = new ArrayList<>(type.getQuestions());
+//        questionsEntities.sort(Comparator.comparingInt(QuestionEntity::getLevel));
+//
+//        List<QuestionNumberedByMachineType> numberedQuestions = new ArrayList<>(questionsEntities.size());
+//        int questionIndex = 0;
+//        for (int i = 0; i < questionsEntities.size(); i++) {
+//            if (0 < i && !questionsEntities.get(i).getLevel().equals(questionsEntities.get(i-1).getLevel())) {
+//                questionIndex = 0;
+//            }
+//            questionIndex++;
+//            numberedQuestions.add(new QuestionNumberedByMachineType(questionsEntities.get(i), questionIndex));
+//        }
+//
+//        return new ModelWithNumberedQuestionsDto(type.getModel(), numberedQuestions);
+        return null;
     }
 
     @Override
@@ -74,11 +74,12 @@ public class ModelServiceImpl implements ModelService {
             throw new EntityNotFoundException("There is no questions with ids in %s".formatted(type.getQuestions()));
         }
 
-        ModelEntity entity = ModelEntity.builder()
-                .model(type.getModel())
-                .questions(questions).build();
+//        ModelEntity entity = ModelEntity.builder()
+//                .model(type.getModel())
+//                .questions(questions).build();
 
-        return typeDao.save(entity);
+ //       return typeDao.save(entity);
+        return null;
     }
 
     @Override
@@ -91,7 +92,7 @@ public class ModelServiceImpl implements ModelService {
         ModelEntity entity = this.findByModel(type.getModel());
 
         entity.setModel(type.getModel());
-        entity.setQuestions(questions);
+      //  entity.setQuestions(questions);
 
         return typeDao.save(entity);
     }

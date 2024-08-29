@@ -1,5 +1,6 @@
 package forms.application.service;
 
+import forms.application.dao.MachineTypeDao;
 import forms.application.model.TypeMachineEntity;
 import forms.application.repository.TypeMachineRepository;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,9 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class TypeMachineEntityServiceImp implements ServiceEntity<TypeMachineEntity> {
-    private final TypeMachineRepository typeMachineRepository;
+    private final MachineTypeDao typeDao;
+
+    private final QuestionService questionService;
 
     @Override
     public TypeMachineEntity create(TypeMachineEntity typeMachine) {

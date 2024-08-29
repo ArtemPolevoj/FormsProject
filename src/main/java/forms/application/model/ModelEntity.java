@@ -41,13 +41,5 @@ public class ModelEntity {
     private String model;
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "вопросы_модели_машин",
-            joinColumns = @JoinColumn(name = "id_модели_машины"),
-            inverseJoinColumns = @JoinColumn(name = "id_вопроса")
-    )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonIgnore
-    private Set<QuestionEntity> questions;
+
 }
