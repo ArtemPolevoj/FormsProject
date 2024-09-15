@@ -25,17 +25,17 @@ import lombok.ToString;
 @Builder
 public class MachineEntity {
     @Id
-    @Column(name = "серийный_номер", unique = true)
+    @Column(name = "серийный_номер")
     private String serialNumber;
 
     @Column(name = "производитель")
     private String manufacturer;
 
     @ManyToOne
-    @JoinColumn(name = "id_модели", unique = true)
+    @JoinColumn(name = "id_модели")
     private ModelEntity model;
 
-    @Column(name = "хозяйственный_номер", unique = true)
+    @Column(name = "хозяйственный_номер")
     private Integer businessNumber;
 
     @Column(name = "наработка")
@@ -48,4 +48,5 @@ public class MachineEntity {
     @ManyToOne
     @JoinColumn(name = "id_подразделения")
     private DivisionEntity division;
+
 }
