@@ -1,6 +1,7 @@
 package forms.application.util;
 
 import forms.application.service.ModelService;
+import forms.application.service.TypeMachineEntityServiceImp;
 import forms.application.service.dto.ModelDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -16,25 +17,26 @@ import java.util.stream.LongStream;
 
 @Component
 @RequiredArgsConstructor
+
 public class InitMachineQuestions {
-    private final ModelService modelService;
+    private final TypeMachineEntityServiceImp typeService;
 
     private final JdbcTemplate template;
 
     @EventListener(ContextRefreshedEvent.class)
     private void initModelQuestions() {
-        Integer size = template.queryForObject("select count(*) from вопросы_модели_машин", Integer.class);
+        Integer size = template.queryForObject("select count(*) from вопросы_типы_машин", Integer.class);
         if (size == null || size == 0) {
-            modelService.update(getCrawlerBulldozer());
-            modelService.update(getTrackedPipelayer());
-            modelService.update(getCrawlerExcavator());
-            modelService.update(getWheeledBulldozer());
-            modelService.update(getWheeledExcavator());
-            modelService.update(getBackhoeLoader());
-            modelService.update(getLoader());
-            modelService.update(getMotorGrader());
-            modelService.update(getDumpTruck());
-            modelService.update(getAnother());
+            typeService.update(getCrawlerBulldozer());
+            typeService.update(getTrackedPipelayer());
+            typeService.update(getCrawlerExcavator());
+            typeService.update(getWheeledBulldozer());
+            typeService.update(getWheeledExcavator());
+            typeService.update(getBackhoeLoader());
+            typeService.update(getLoader());
+            typeService.update(getMotorGrader());
+            typeService.update(getDumpTruck());
+            typeService.update(getAnother());
         }
     }
 

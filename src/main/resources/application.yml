@@ -15,9 +15,9 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/forms-project
+    url: jdbc:postgresql://localhost:5432/gnivc
     username: postgres
-    password: Artem1385
+    password: admin
   #для инициализации schema.sql и data.sql
   sql:
     init:

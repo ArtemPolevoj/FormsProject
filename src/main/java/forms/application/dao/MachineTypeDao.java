@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface MachineTypeDao extends JpaRepository<ModelEntity,  Long> {
-    Optional<ModelEntity> findByModel(String model);
+    Optional<ModelEntity> findByModel(String typeMachine);
 }
