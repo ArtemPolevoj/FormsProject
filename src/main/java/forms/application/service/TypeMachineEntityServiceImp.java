@@ -5,7 +5,7 @@ import forms.application.repository.TypeMachineRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,7 +38,11 @@ public class TypeMachineEntityServiceImp implements ServiceEntity<TypeMachineEnt
         typeMachineRepository.deleteById(id);
     }
     public List<String> getAllNames(){
-        return getAll().stream().map(TypeMachineEntity::getTypeMachine).
-                collect(java.util.stream.Collectors.toList());
+        List<String> allNames = new ArrayList<>();
+        for (TypeMachineEntity typeMachineEntity : typeMachineRepository.findAll()) {
+            allNames.add(typeMachineEntity.getTypeMachine());
+        }
+
+        return allNames;
     }
 }
