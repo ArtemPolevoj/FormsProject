@@ -1,6 +1,5 @@
 package forms.application.dao;
 
-import forms.application.model.ModelEntity;
 import forms.application.model.TypeMachineEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

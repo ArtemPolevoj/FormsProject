@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("Сервис для рапорты с отчетами")
 @Import(value = {
         ReportServiceImpl.class, OrganizationServiceImpl.class,
-        MachineServiceImpl.class, ModelServiceImpl.class, ImplementerServiceImpl.class, ImageServiceImpl.class,
+        MachineServiceImpl.class, TypeMachineServiceImpl.class, ImplementerServiceImpl.class, ImageServiceImpl.class,
         MinioConfig.class, MinioProperties.class, QuestionServiceImpl.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

@@ -18,7 +18,7 @@ import lombok.ToString;
 @Table(name = "техника")
 @Getter
 @Setter
-@EqualsAndHashCode(of = "serialNumber")
+@EqualsAndHashCode(exclude = {"operatingTime", "organization","typeMachine", "division"})
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,12 +31,15 @@ public class MachineEntity {
     @Column(name = "производитель")
     private String manufacturer;
 
+    @Column(name = "модель")
+    private String model;
+
     @ManyToOne
-    @JoinColumn(name = "id_модели")
-    private ModelEntity model;
+    @JoinColumn(name = "id_типы_машин")
+    private TypeMachineEntity typeMachine;
 
     @Column(name = "хозяйственный_номер")
-    private Integer businessNumber;
+    private String businessNumber;
 
     @Column(name = "наработка")
     private Integer operatingTime;

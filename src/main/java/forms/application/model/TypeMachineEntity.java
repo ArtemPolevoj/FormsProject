@@ -14,9 +14,10 @@ import java.util.Set;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@ToString
+@ToString(of = {"id", "typeMachine"})
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class TypeMachineEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

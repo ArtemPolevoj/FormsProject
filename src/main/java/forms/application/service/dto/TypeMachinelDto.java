@@ -12,9 +12,9 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModelDto {
+public class TypeMachinelDto {
     @NotNull
-    private String model;
+    private String typeMachine;
 
     @NotNull
     private Set<Long> questions;

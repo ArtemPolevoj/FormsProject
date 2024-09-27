@@ -1,7 +1,7 @@
 package forms.application.service;
 
 import forms.application.service.dto.ModelWithNumberedQuestionsDto;
-import forms.application.util.InitMachineQuestions;
+import forms.application.util.InitTypeMachineQuestions;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
-@Import(value = {ModelServiceImpl.class, QuestionServiceImpl.class, InitMachineQuestions.class})
+@Import(value = {TypeMachineServiceImpl.class, QuestionServiceImpl.class, InitTypeMachineQuestions.class})
 @Transactional(propagation = Propagation.NEVER)
 @DisplayName(value = "Сервис для работы с моделями машин")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Slf4j
 class ModelServiceImplTest {
     @Autowired
-    ModelServiceImpl modelService;
+    TypeMachineServiceImpl modelService;
 
     @Test
     void findAllByMachineWithNumberedQuestions() {

@@ -2,7 +2,7 @@ package forms.application.service;
 
 import forms.application.dao.MachineDao;
 import forms.application.model.MachineEntity;
-import forms.application.model.ModelEntity;
+import forms.application.model.TypeMachineEntity;
 import forms.application.service.dto.MachineDto;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class MachineServiceImpl implements MachineService {
     private final MachineDao machineDao;
 
-    private final ModelService typeService;
+    private final TypeMachineService typeService;
 
     @Override
     public List<MachineEntity> findAll() {
@@ -45,19 +45,19 @@ public class MachineServiceImpl implements MachineService {
                     "Machine with serial number = " + machine.getSerialNumber() + " is already exists");
         }
 
-        ModelEntity type = typeService.findByModel(machine.getModel());
+        TypeMachineEntity type = typeService.findByTypeMachine(machine.getModel());
 
         return machineDao.save(MachineDto.convert(machine, type));
     }
 
     @Override
     public MachineEntity update(MachineDto machine) {
-        ModelEntity type = typeService.findByModel(machine.getModel());
+        TypeMachineEntity type = typeService.findByTypeMachine(machine.getModel());
 
         MachineEntity bySerialNumber = this.findBySerialNumber(machine.getSerialNumber());
 
         bySerialNumber.setBusinessNumber(machine.getBusinessNumber());
-        bySerialNumber.setModel(type);
+        bySerialNumber.setTypeMachine(type);
         bySerialNumber.setOperatingTime(machine.getOperatingTime());
         bySerialNumber.setManufacturer(machine.getManufacturer());
 

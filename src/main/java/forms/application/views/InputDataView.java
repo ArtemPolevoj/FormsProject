@@ -28,7 +28,7 @@ public class InputDataView extends VerticalLayout {
     private final ImplementerServiceImpl implementerService;
     private final OrganizationServiceImpl organizationService;
     private final DivisionEntityServiceImpl divisionService;
-    private final TypeMachineEntityServiceImp typeMachineService;
+    private final TypeMachineServiceImpl typeMachineService;
     private final ComboBox<String> implementer = new ComboBox<>("Исполнитель");
     private final ComboBox<String> typeMachine = new ComboBox<>("Тип техники");
     private final ComboBox<String> division = new ComboBox<>("Подразделение");
@@ -43,7 +43,7 @@ public class InputDataView extends VerticalLayout {
     public InputDataView(OrganizationServiceImpl organizationEntityService,
                          ImplementerServiceImpl implementerService,
                          DivisionEntityServiceImpl divisionService,
-                         TypeMachineEntityServiceImp typeMachineService,
+                         TypeMachineServiceImpl typeMachineService,
                          MachineServiceImpl machineService) {
 
         this.implementerService = implementerService;
@@ -59,7 +59,7 @@ public class InputDataView extends VerticalLayout {
         H2 h2 = new H2("Входные данные");
         Button proceed = new Button("Продолжить");
         proceed.addClickListener(e -> {
-            if (!checkNull()) {
+            if (checkNull() && checkOperationTime()) {
                 proceed.getUI().ifPresent(ui ->
                         ui.navigate("PreInspection"));
             }
@@ -116,10 +116,11 @@ public class InputDataView extends VerticalLayout {
         division.setHelperText("Выберете подразделение из списка или введите новое подразделение");
         add(division);
     }
+
     private void getTypeMachine() {
-        typeMachine.setItems(typeMachineService.getAllNames());
-        typeMachine.addValueChangeListener(e -> setOrganization(division.getValue(), typeMachine.getValue())
-        );
+
+        typeMachine.setItems(typeMachineService.getAllTypeMachines());
+        typeMachine.addValueChangeListener(e -> setOrganization(division.getValue(), typeMachine.getValue()));
         typeMachine.setHelperText("Выберете тип техники из списка");
         add(typeMachine);
     }
@@ -135,10 +136,10 @@ public class InputDataView extends VerticalLayout {
 //            organization.setValue(customValue);
 //        });
 
-      //  organization.setItems(organizationService.getAllNames());
+        //  organization.setItems(organizationService.getAllNames());
         organization.setHelperText("Выберете из списка или введите нового заказчика");
 
-        organization.addValueChangeListener(e -> setManufacturer(organization.getValue()));
+        organization.addValueChangeListener(e -> setManufacturer(organization.getValue(), division.getValue()));
 
         add(organization);
     }
@@ -210,6 +211,7 @@ public class InputDataView extends VerticalLayout {
         suffix.setText("м.ч.");
         operationTime.setSuffixComponent(suffix);
         operationTime.setHelperText("Введите время наработки(только целые числа)");
+        operationTime.addValueChangeListener(e -> checkOperationTime());
         add(operationTime);
     }
 
@@ -217,80 +219,72 @@ public class InputDataView extends VerticalLayout {
         List<String> organizationList = new ArrayList<>();
         for (MachineEntity machine : machineList) {
             if (machine.getDivision().getName().equals(divisionName)
-                    && machine.getModel().getModel().equals(typeMachine)) {
+                    && machine.getTypeMachine().getTypeMachine().equals(typeMachine)) {
                 organizationList.add(machine.getOrganization().getName());
             }
         }
         if (organizationList.isEmpty()) {
             this.organization.clear();
             organization.setItems(organizationService.getAllNames());
-        }else {
-            if (organizationList.size() == 1) {
-                this.organization.setValue(organizationList.getFirst());
-            }else {
-                this.organization.setItems(organizationList);
-            }
-         }
+        } else {
+            this.organization.setValue(organizationList.getFirst());
+            this.organization.setItems(organizationList);
+        }
     }
 
 
-    private void setManufacturer(String organizationName) {
+    private void setManufacturer(String organizationName, String divisionName) {
         List<String> manufacturersList = new ArrayList<>();
         List<String> manufacturers = new ArrayList<>();
         machineList.forEach(m -> manufacturers.add(m.getManufacturer()));
         for (MachineEntity machine : machineList) {
-            if (machine.getOrganization().getName().equals(organizationName)) {
+            if (machine.getOrganization().getName().equals(organizationName) && machine.getDivision().getName().equals(divisionName)) {
                 manufacturersList.add(machine.getManufacturer());
             }
         }
         if (manufacturersList.isEmpty()) {
             manufacturer.setItems(manufacturers);
         } else {
-            if (manufacturersList.size() == 1) {
-                this.manufacturer.setValue(manufacturersList.getFirst());
-            } else {
-                this.manufacturer.setItems(manufacturersList);
-            }
+            this.manufacturer.setItems(manufacturersList);
+            this.manufacturer.setValue(manufacturersList.getFirst());
+
         }
     }
+
     private void setModel(String manufacturerName) {
         List<String> modelListManufacturer = new ArrayList<>();
         List<String> modelList = new ArrayList<>();
-        machineList.forEach(machine -> modelList.add((machine.getModel().getModel())));
+        machineList.forEach(machine -> modelList.add((machine.getModel())));
 
         for (MachineEntity machine : machineList) {
             if (machine.getManufacturer().equals(manufacturerName)) {
-                modelListManufacturer.add(machine.getModel().getModel());
+                modelListManufacturer.add(machine.getModel());
             }
         }
         if (modelListManufacturer.isEmpty()) {
             model.setItems(modelList);
         } else {
-            if (modelListManufacturer.size() == 1) {
-                this.model.setValue(modelListManufacturer.getFirst());
-            } else {
-                this.model.setItems(modelListManufacturer);
-            }
+            this.model.setItems(modelListManufacturer);
+            this.model.setValue(modelListManufacturer.getFirst());
+
         }
     }
 
     private void setBusinessNumber(String modelName) {
         List<String> businessNumberList = new ArrayList<>();
         List<String> businessNumber = new ArrayList<>();
-        machineList.forEach(machine -> businessNumberList.add(String.valueOf(machine.getBusinessNumber())));
+        machineList.forEach(machine -> businessNumberList.add(machine.getBusinessNumber()));
         for (MachineEntity machine : machineList) {
-            if (machine.getModel().getModel().equals(modelName)) {
-                businessNumber.add(machine.getBusinessNumber().toString());
+            if (machine.getModel().equals(modelName)) {
+                businessNumber.add(machine.getBusinessNumber());
             }
         }
         if (businessNumber.isEmpty()) {
             this.businessNumber.setItems(businessNumberList);
         } else {
-            if (businessNumber.size() == 1) {
-                this.businessNumber.setValue(businessNumber.getFirst());
-            } else {
-                this.businessNumber.setItems(businessNumber);
-            }
+            this.businessNumber.setItems(businessNumber);
+            this.businessNumber.setValue(businessNumber.getFirst());
+
         }
     }
 
@@ -299,18 +293,15 @@ public class InputDataView extends VerticalLayout {
         List<String> serial = new ArrayList<>();
         machineList.forEach(machine -> serialNumberList.add(machine.getSerialNumber()));
         for (MachineEntity machine : machineList) {
-            if (machine.getBusinessNumber().toString().equals(businessNumber)) {
+            if (machine.getBusinessNumber().equals(businessNumber)) {
                 serial.add(machine.getSerialNumber());
             }
         }
         if (serial.isEmpty()) {
             this.serialNumber.setItems(serialNumberList);
         } else {
-            if (serialNumberList.size() == 1) {
-                this.serialNumber.setValue(serial.getFirst());
-            } else {
-                this.serialNumber.setItems(serial);
-            }
+            this.serialNumber.setItems(serial);
+            this.serialNumber.setValue(serial.getFirst());
         }
     }
 
@@ -318,34 +309,34 @@ public class InputDataView extends VerticalLayout {
         if (implementer.getValue() == null) {
             Notification.show("Заполните исполнителя");
             implementer.focus();
-            return true;
+            return false;
         }
         if (division.getValue() == null) {
             Notification.show("Заполните подразделение");
             division.focus();
-            return true;
+            return false;
         }
 
         if (typeMachine.getValue() == null) {
             Notification.show("Заполните тип техники");
             typeMachine.focus();
-            return true;
+            return false;
         }
 
         if (organization.getValue() == null) {
             Notification.show("Заполните заказчика");
             organization.focus();
-            return true;
+            return false;
         }
         if (manufacturer.getValue() == null) {
             Notification.show("Заполните производителя");
             manufacturer.focus();
-            return true;
+            return false;
         }
         if (model.getValue() == null) {
             Notification.show("Заполните модель");
             model.focus();
-            return true;
+            return false;
         }
         if (businessNumber.getValue() == null) {
             Notification.show("Заполните хоз номер");
@@ -355,14 +346,35 @@ public class InputDataView extends VerticalLayout {
         if (serialNumber.getValue() == null) {
             Notification.show("Заполните сер номер");
             serialNumber.focus();
-            return true;
+            return false;
         }
         if (operationTime.getValue() == null) {
             Notification.show("Заполните наработку");
             operationTime.focus();
-            return true;
+            return false;
         }
-        return false;
+        return true;
+    }
+
+
+    private boolean checkOperationTime() {
+        boolean flag = true;
+        MachineEntity machine = new MachineEntity();
+        machine.setManufacturer(manufacturer.getValue());
+        machine.setModel(model.getValue());
+        machine.setBusinessNumber(businessNumber.getValue());
+        machine.setSerialNumber(serialNumber.getValue());
+        for (MachineEntity m : machineList) {
+            if (m.equals(machine) && m.getOperatingTime() >= operationTime.getValue()) {
+                flag = false;
+                Notification.show("Внесённая наработка меньше или равна предыдущей наработке("
+                        + m.getOperatingTime() + ").");
+                operationTime.focus();
+                operationTime.clear();
+                break;
+            }
+        }
+        return flag;
     }
 
 }
