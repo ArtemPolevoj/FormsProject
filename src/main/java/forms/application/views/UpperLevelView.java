@@ -1,25 +1,27 @@
 package forms.application.views;
 
-import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.springframework.stereotype.Service;
 
-import java.awt.*;
 
 
 @PageTitle("UpperLevel")
 @Route(value = "UpperLevel")
+@Service
 public class UpperLevelView extends VerticalLayout {
+    private final InputDataView dataView;
 
-    public UpperLevelView() {
+
+    public UpperLevelView(InputDataView dataView) {
+        this.dataView = dataView;
 
 
         setUpperLevelView();
@@ -41,9 +43,15 @@ public class UpperLevelView extends VerticalLayout {
         //генерим серию вопросов
         Paragraph paragraph = new Paragraph();
         paragraph.setText("Здесь генерим серию вопросов");
+        QuestionView question = new QuestionView("1", "Вопрос", "Пояснения");
+
         add(paragraph);
+        add(question);
 
         add(new HorizontalLayout(back, proceed));
+
+
     }
+
 
 }
