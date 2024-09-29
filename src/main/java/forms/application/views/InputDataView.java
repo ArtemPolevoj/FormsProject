@@ -1,7 +1,7 @@
 package forms.application.views;
 
+import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.vaadin.flow.component.button.Button;
-
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -9,19 +9,20 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.combobox.ComboBox;
 
 import forms.application.model.MachineEntity;
 import forms.application.service.*;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @PageTitle("InputData")
 @Route(value = "InputData")
+@Service
 public class InputDataView extends VerticalLayout {
 
 
@@ -52,6 +53,7 @@ public class InputDataView extends VerticalLayout {
         this.typeMachineService = typeMachineService;
         machineList = machineService.findAll();
         setInputDataView();
+
     }
 
     private void setInputDataView() {
@@ -74,20 +76,20 @@ public class InputDataView extends VerticalLayout {
         add(h1);
         add(h2);
 
-        getImplementer();
-        getDivision();
-        getTypeMachine();
-        getOrganization();
-        getManufacturer();
-        getModel();
-        getBusinessNumber();
-        getSerialNumber();
-        getOperationTime();
+        implementer();
+        division();
+        typeMachine();
+        organization();
+        manufacturer();
+        model();
+        businessNumber();
+        serialNumber();
+        operationTime();
 
         add(new HorizontalLayout(back, proceed));
     }
 
-    private void getImplementer() {
+    private void implementer() {
         implementer.setAllowCustomValue(true);
 //        implementer.addCustomValueSetListener(e -> {
 //            String customValue = e.getDetail();
@@ -100,7 +102,7 @@ public class InputDataView extends VerticalLayout {
         add(implementer);
     }
 
-    private void getDivision() {
+    private void division() {
         division.setAllowCustomValue(true);
 //        division.addCustomValueSetListener(e -> {
 //            String customValue = e.getDetail();
@@ -117,7 +119,7 @@ public class InputDataView extends VerticalLayout {
         add(division);
     }
 
-    private void getTypeMachine() {
+    private void typeMachine() {
 
         typeMachine.setItems(typeMachineService.getAllTypeMachines());
         typeMachine.addValueChangeListener(e -> setOrganization(division.getValue(), typeMachine.getValue()));
@@ -126,7 +128,7 @@ public class InputDataView extends VerticalLayout {
     }
 
 
-    private void getOrganization() {
+    private void organization() {
 
         organization.setAllowCustomValue(true);
 //        organization.addCustomValueSetListener(e -> {
@@ -145,7 +147,7 @@ public class InputDataView extends VerticalLayout {
     }
 
 
-    private void getManufacturer() {
+    private void manufacturer() {
 
         manufacturer.setAllowCustomValue(true);
 //        manufacturer.addCustomValueSetListener(e -> {
@@ -161,7 +163,7 @@ public class InputDataView extends VerticalLayout {
         add(manufacturer);
     }
 
-    private void getModel() {
+    private void model() {
 
         model.setAllowCustomValue(true);
 //        model.addCustomValueSetListener(e -> {
@@ -177,7 +179,7 @@ public class InputDataView extends VerticalLayout {
         add(model);
     }
 
-    private void getBusinessNumber() {
+    private void businessNumber() {
 
         businessNumber.setAllowCustomValue(true);
 //        businessNumber.addCustomValueSetListener(e -> {
@@ -193,7 +195,7 @@ public class InputDataView extends VerticalLayout {
         add(businessNumber);
     }
 
-    private void getSerialNumber() {
+    private void serialNumber() {
 
         serialNumber.setAllowCustomValue(true);
 //        serialNumber.addCustomValueSetListener(e -> {
@@ -206,7 +208,7 @@ public class InputDataView extends VerticalLayout {
         add(serialNumber);
     }
 
-    private void getOperationTime() {
+    private void operationTime() {
         Div suffix = new Div();
         suffix.setText("м.ч.");
         operationTime.setSuffixComponent(suffix);
@@ -341,7 +343,7 @@ public class InputDataView extends VerticalLayout {
         if (businessNumber.getValue() == null) {
             Notification.show("Заполните хоз номер");
             businessNumber.focus();
-            return true;
+            return false;
         }
         if (serialNumber.getValue() == null) {
             Notification.show("Заполните сер номер");
@@ -375,6 +377,25 @@ public class InputDataView extends VerticalLayout {
             }
         }
         return flag;
+    }
+
+    public String getTypeMachine() {
+        return typeMachine.getValue();
+    }
+    public JsonObject getInputDataJsonObject() {
+        JsonObject jsonObject = new JsonObject();
+        JsonObject machineList = new JsonObject();
+        machineList.addProperty("division", division.getValue());
+        machineList.addProperty( "typeMachine", typeMachine.getValue());
+        machineList.addProperty( "organization", organization.getValue());
+        machineList.addProperty( "manufacturer", manufacturer.getValue());
+        machineList.addProperty("model", model.getValue());
+        machineList.addProperty( "businessNumber", businessNumber.getValue());
+        machineList.addProperty( "serialNumber", serialNumber.getValue());
+        machineList.addProperty( "operationTime", operationTime.getValue());
+        jsonObject.addProperty("implementer", implementer.getValue());
+        jsonObject.add("machine", machineList);
+        return jsonObject;
     }
 
 }
