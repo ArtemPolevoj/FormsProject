@@ -8,9 +8,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.springframework.stereotype.Service;
 
 @PageTitle("Attachments")
 @Route(value = "Attachments")
+@Service
 public class AttachmentsView extends VerticalLayout {
     public AttachmentsView() {
 

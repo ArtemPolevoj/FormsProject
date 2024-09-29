@@ -8,9 +8,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.springframework.stereotype.Service;
 
 @PageTitle("LowerLevel")
 @Route(value = "LowerLevel")
+@Service
 public class LowerLevelView extends VerticalLayout {
     public LowerLevelView() {
 
