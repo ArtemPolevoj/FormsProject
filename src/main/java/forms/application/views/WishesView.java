@@ -105,7 +105,7 @@ this.preInspectionView = preInspectionView;
 //        allJson.add("attachments", attachmentsView.getAttachmentsJsonObject());
 //        allJson.add("averageLevel", averageLevelView.getAverageLevelJsonObject());
 //        allJson.add("lowerLevel", lowerLevelView.getLowerLevelJsonObject());
-//        allJson.add("upperLevel", upperLevelView.getUpperLevelJsonObject());
+        allJson.add("upperLevel", upperLevelView.getUpperLevelJsonObject());
         allJson.add("preInspection", preInspectionView.getPreInspectionViewJsonObject());
         System.out.println(allJson);
 
