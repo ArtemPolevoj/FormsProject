@@ -1,6 +1,7 @@
 package forms.application.views;
 
 
+import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -15,17 +16,26 @@ import com.vaadin.flow.component.shared.Tooltip;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
+import forms.application.service.ImageServiceImpl;
+import org.apache.commons.io.IOUtils;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class QuestionView extends Composite<VerticalLayout> {
 
-
+    private ImageServiceImpl imageService;
     private final String number;
     private final String text;
     private final String explanations;
     private TextArea defect;
     private TextArea listWork;
+    private  JsonObject jsonObject;
+    private JsonObject question;
+    private  VerticalLayout mainDefect;
+    private  String fileName;
 
-    public QuestionView(String number, String text, String explanations) {
+    public QuestionView(ImageServiceImpl imageService, String number, String text, String explanations) {
+        this.imageService = imageService;
         this.number = number;
         this.text = text;
         this.explanations = explanations;
@@ -36,9 +46,8 @@ public class QuestionView extends Composite<VerticalLayout> {
         TextArea textQuestion = setTextArea(number, explanations);
         textQuestion.setValue(text);
         textQuestion.setReadOnly(true);
-        Button buttonNoComments = new Button("Нет замечаний");
-        //<theme-editor-local-classname>
-        buttonNoComments.addClassName("question-view-button-1");
+
+
         Button buttonYesComments = new Button("Есть замечания");
         //<theme-editor-local-classname>
         buttonYesComments.addClassName("question-view-button-2");
@@ -54,33 +63,64 @@ public class QuestionView extends Composite<VerticalLayout> {
         setPhoto.setDropAllowed(true);
         setPhoto.setUploadButton(buttonPhoto);
         setPhoto.setDropAllowed(false);
+        setPhoto.addSucceededListener(event -> {
+            fileName = event.getFileName();
+
+            InputStream inputStream = buffer.getInputStream(fileName);
+            byte[] bytes;
+            try {
+                bytes = IOUtils.toByteArray(inputStream);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+           imageService.uploadImage(fileName, bytes);
+
+        });
 
         NativeLabel photoLabel = new NativeLabel("Фото неисправности");
         setPhoto.setId("defect");
         photoLabel.setFor(setPhoto.getId().get());
-
         Div getPhoto = new Div(photoLabel, setPhoto);
-
         HorizontalLayout defectLayout = new HorizontalLayout(defect);
-
         HorizontalLayout listWorkLayout = new HorizontalLayout(listWork);
+        mainDefect = new VerticalLayout(defectLayout, listWorkLayout, getPhoto);
+        mainDefect.setVisible(false);
 
-VerticalLayout mainDefect = new VerticalLayout(defectLayout, listWorkLayout, getPhoto);
-mainDefect.setVisible(false);
+        buttonYesComments.addClickListener(e -> {
+            mainDefect.setVisible(true);
+            jsonObject = new JsonObject();
+            question = new JsonObject();
+            question.addProperty(text, "Есть замечания");
 
+        });
 
-        buttonYesComments.addClickListener(e -> mainDefect.setVisible(true));
+        Button buttonNoComments = new Button("Нет замечаний");
+        //<theme-editor-local-classname>
+        buttonNoComments.addClassName("question-view-button-1");
+        buttonNoComments.addClickListener(e -> {
+            mainDefect.setVisible(false);
+            jsonObject = new JsonObject();
+            jsonObject.addProperty(text, "Нет замечаний");
+        });
 
         Button buttonNoInspection = new Button("Нет осмотра");
-        buttonNoInspection.addClickListener(e -> mainDefect.setVisible(false) );
         //<theme-editor-local-classname>
         buttonNoInspection.addClassName("question-view-button-4");
+        buttonNoInspection.addClickListener(e -> {
+            mainDefect.setVisible(false);
+            jsonObject = new JsonObject();
+            jsonObject.addProperty(text, "Нет осмотра");
+        });
+
         Button buttonAbsent = new Button("Отсутствует");
-        buttonAbsent.addClickListener(e -> mainDefect.setVisible(false) );
         //<theme-editor-local-classname>
         buttonAbsent.addClassName("question-view-button-3");
-
-        buttonNoComments.addClickListener(e -> mainDefect.setVisible(false) );
+        buttonAbsent.addClickListener(e -> {
+            mainDefect.setVisible(false);
+            jsonObject = new JsonObject();
+            jsonObject.addProperty(text, "Отсутствует");
+        });
 
         HorizontalLayout texts = new HorizontalLayout(textQuestion);
         HorizontalLayout firstLineButton = new HorizontalLayout(buttonNoComments, buttonYesComments);
@@ -94,7 +134,7 @@ mainDefect.setVisible(false);
     }
     private TextArea setTextArea(String label, String textHelper) {
         TextArea textArea = new TextArea(label);
-        Button button = new Button(new Icon(VaadinIcon.INFO_CIRCLE));
+        var button = new Button(new Icon(VaadinIcon.INFO_CIRCLE));
         button.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE,
                 ButtonVariant.LUMO_ICON);
         textArea.setSuffixComponent(button);
@@ -103,10 +143,28 @@ mainDefect.setVisible(false);
         button.addClickListener(event -> tooltip.setOpened(!tooltip.isOpened()));
         return textArea;
     }
-    public String getDefect(){
-        return defect.getValue();
+    public JsonObject getQuestion() {
+
+        if (mainDefect.isVisible() && checkNull()) {
+            question.addProperty("неисправность", defect.getValue());
+            question.addProperty("материалы, работы", listWork.getValue());
+            question.addProperty("Фото", fileName);
+            jsonObject.add(text, question);
+            return jsonObject;
+        }else{
+            return jsonObject;
+        }
     }
-    public String getListWork(){
-        return listWork.getValue();
+    public boolean checkNull() {
+        if (mainDefect.isVisible() && defect.isEmpty()) {
+            Notification.show("Заполните неисправность");
+            defect.focus();
+            return false;        }
+        if (mainDefect.isVisible() && listWork.isEmpty()) {
+            Notification.show("Заполните материалы, работы");
+            listWork.focus();
+            return false;
+        }
+        return true;
     }
 }
