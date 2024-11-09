@@ -1,0 +1,40 @@
+server:
+  port: ${PORT:8080}
+logging:
+  level:
+    org:
+      atmosphere: warn
+spring:
+  mustache:
+    check-template-location: false
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/forms_project_test
+    username: postgres
+    password: admin
+  #для инициализации schema.sql и data.sql
+  sql:
+    init:
+      mode: never
+      data-locations: classpath:data.sql #здесь прописывать инсерты
+#      schema-locations: schema.sql #здесь прописывать создание таблиц
+
+# Launch the default browser when starting the application in development mode
+vaadin:
+  launch-browser: true
+# To improve the performance during development.
+# For more information https://vaadin.com/docs/latest/integrations/spring/configuration#special-configuration-parameters
+  allowed-packages: com.vaadin,org.vaadin,forms.application
+
+minio:
+  address: localhost
+  port: 9000
+  tsl: false
+  login: admin
+  password: password
+
